@@ -1,16 +1,32 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <MenuComponent></MenuComponent>
+  <router-view></router-view>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import MenuComponent from './components/MenuComponent.vue'
+import Global from './Global';
+import ServiceEmpleados from './services/ServiceEmpleados';
+const service = new ServiceEmpleados;
 
 export default {
+  
   name: 'App',
   components: {
-    HelloWorld
-  }
+    MenuComponent
+  },
+  created(){
+    service.getEmpleados().then(result=>{
+        Global.username= result[0].apellido;
+        Global.password = result[0].idEmpleado.toString();
+        service.postLogin().then(result=>{
+            Global.token = result;
+            console.log(Global);
+            
+        })
+    })
+  },
 }
 </script>
 
